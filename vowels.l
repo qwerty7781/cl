@@ -6,7 +6,7 @@ int consonants=0;
 %%
 [aeiouAEIOU]{vowels++;}
 [b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z]{consonants++;}
-.|\n
+.|\n               { }
 %%
 int main()
 {
