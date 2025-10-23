@@ -143,12 +143,14 @@ int main() {
 
     // acceptance check
     if (top == 0 && strcmp(stack_[top], "E") == 0 && ntokens > 0) {
-        printf("\n✅ Accepted: The input is syntactically correct.\n");
+        printf("\n Accepted: The input is syntactically correct.\n");
     } else {
-        printf("\n❌ Rejected: Invalid syntax.\n");
+        printf("\n Rejected: Invalid syntax.\n");
     }
 
     return 0;
 }
+
+
 // id+id*id  ==    valid
 //id**id == invalid
