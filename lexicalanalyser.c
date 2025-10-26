@@ -92,4 +92,88 @@ return 0;
 // int count = 10;
 // if (count > 0)
 // count = count - 1;
-// }
+//
+}
+//IF===THE==ABOVE==CODE==DIDNT==WORK==THEN==USE==BELOW==CODE
+
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+int isKeyword(char word[]) {
+    char keywords[4][10] = {"int", "float", "if", "else"};
+    for (int i = 0; i < 4; i++) {
+        if (strcmp(word, keywords[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+int main() {
+    char ch, word[20];
+    int i = 0;
+    int keywordCount = 0, identifierCount = 0, numberCount = 0, operatorCount = 0, specialCount = 0;
+
+    FILE *fp = fopen("input.c", "r");
+    if (fp == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
+
+    while ((ch = fgetc(fp)) != EOF) {
+        if (isalpha(ch)) {
+            word[i++] = ch;
+            while (isalnum(ch = fgetc(fp))) {
+                if (i < sizeof(word) - 1)
+                    word[i++] = ch;
+            }
+            word[i] = '\0';
+            i = 0;
+            ungetc(ch, fp);
+            if (isKeyword(word)) {
+                printf("[Keyword] %s\n", word);
+                keywordCount++;
+            } else {
+                printf("[Identifier] %s\n", word);
+                identifierCount++;
+            }
+        }
+        else if (isdigit(ch)) {
+            int hasDot = 0;
+            word[i++] = ch;
+            while (isdigit(ch = fgetc(fp)) || (ch == '.' && !hasDot)) {
+                if (ch == '.') hasDot = 1;
+                if (i < sizeof(word) - 1)
+                    word[i++] = ch;
+            }
+            word[i] = '\0';
+            i = 0;
+            ungetc(ch, fp);
+            printf("[Number] %s\n", word);
+            numberCount++;
+        }
+        else if (ch == '+' || ch == '-' || ch == '=' || ch == '>' || ch == '<') {
+            printf("[Operator] %c\n", ch);
+            operatorCount++;
+        }
+        else if (ch == ';' || ch == '{' || ch == '}' || ch == '(' || ch == ')') {
+            printf("[Special] %c\n", ch);
+            specialCount++;
+        }
+        else if (ch == ' ' || ch == '\n' || ch == '\t') {
+            continue;
+        }
+    }
+
+    fclose(fp);
+
+    printf("\nToken counts:\n");
+    printf("Keywords: %d\n", keywordCount);
+    printf("Identifiers: %d\n", identifierCount);
+    printf("Numbers: %d\n", numberCount);
+    printf("Operators: %d\n", operatorCount);
+    printf("Special: %d\n", specialCount);
+
+    return 0;
+}
